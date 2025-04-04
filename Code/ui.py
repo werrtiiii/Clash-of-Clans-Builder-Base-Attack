@@ -1,9 +1,9 @@
 import cv2
-import pyautogui as pa
 import time
 import win32gui
 import ctypes
 import win32ui
+import pyautogui
 import win32con
 import numpy as np
 import subprocess
@@ -175,10 +175,10 @@ class GameAutomationApp:
                 print(message)
                 self.update_status(message)
                 time.sleep(0.8)
-                swipe(960, 200, 960, 420, 100, device=self.selected_device)
+                swipe(640, 200, 640, 330, 100, device=self.selected_device)
                 time.sleep(0.7)
                 x, y = getxy("./pic/dw.png", 0.2, device=self.selected_device)
-                x, y = x-39, y+171
+                x, y = x-26, y+114
                 tap(x, y, device=self.selected_device)
                 tap(*change_xy(1074, 720), device=self.selected_device)
                 tap(*change_xy(1228, 112), device=self.selected_device)

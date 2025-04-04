@@ -1,5 +1,4 @@
 import cv2
-import pyautogui as pa
 import time
 import win32gui
 import ctypes
@@ -12,6 +11,7 @@ from tkinter import ttk
 import sys
 import threading
 import queue
+import uiautomator2 as u2
 
 def get_connected_devices(adb_path):
     """通过 adb devices 获取连接的设备列表"""
@@ -78,18 +78,21 @@ def long_press(x, y, duration=1000, device=None, adb_path=r'platform-tools\adb.e
 
 def change_xy(x, y):
     """将相对坐标转换为屏幕坐标（具体转换公式根据设备分辨率设定）"""
-    return int(x/1470*1920), int((y-34)/826*1080)
+    return int(x/1470*1280), int((y-34)/826*720)
 
 def tapking(device=None):
     x, y = change_xy(150, 770)
     tap(x, y, device=device)
 
 def tapsend(device=None):
-    x, y = change_xy(1162, 444)
+    x, y = change_xy(720, 646)
     tap(x, y, device=device)
 
 def attack1(jineng, device=None):
-    swipe(960, 540, 400, 540, 100, device=device)
+    d = u2.connect(device) 
+    d().pinch_in(steps=6)
+    time.sleep(0.1)
+    swipe(640, 460, 640, 100, 100, device=device)
     kingt = 0
     if getxy("./pic/king3.png", 0.2, device=device) != 0 or getxy("./pic/king.png", 0.2, device=device) != 0:
         kingt = 1
@@ -99,7 +102,7 @@ def attack1(jineng, device=None):
         tapking(device=device)
         time.sleep(2)
     tap(*change_xy(276, 778), device=device)
-    long_press(*change_xy(1162, 444), 2000, device=device)
+    long_press(*change_xy(720, 646), 2000, device=device)
     if jineng:
         print("放技能👻")
         for i in range(10):
@@ -111,10 +114,11 @@ def attack1(jineng, device=None):
         if kingt:
             tapking(device=device)
         time.sleep(2)
-    if getxy("./pic/next.png", 0.3, device=device) != 0:
+    if getxy("./pic/next.png", 0.2, device=device) != 0:
         print("第二阶段进攻👻")
-        time.sleep(0.3)
-        swipe(960, 540, 400, 540, 100, device=device)
+        d().pinch_in(steps=6)
+        time.sleep(0.1)
+        swipe(640, 460, 640, 100, 100, device=device)
         time.sleep(0.5)
         kingt = 0
         if getxy("./pic/king3.png", 0.2, device=device) != 0 or getxy("./pic/king.png", 0.2, device=device) != 0:
@@ -125,7 +129,7 @@ def attack1(jineng, device=None):
             tapking(device=device)
             time.sleep(2)
         tap(*getxy("./pic/nvwu.png", 0.3, device=device),device=device)
-        long_press(*change_xy(1162, 444), 2000, device=device)
+        long_press(*change_xy(720, 646), 2000, device=device)
         if jineng:
             print("放技能👻")
             for i in range(10):
@@ -137,7 +141,7 @@ def attack1(jineng, device=None):
                 tapking(device=device)
             time.sleep(2)
 
-def auto_night_attack(attack_plan, jineng, device=None):
+def auto_night_attack(attack_plan, jineng=1, device=None):
     tap(*change_xy(86, 756), device=device)
     tap(*change_xy(1084, 584), device=device)
     time.sleep(1)
@@ -156,9 +160,10 @@ def auto_night_attack(attack_plan, jineng, device=None):
         tap(*change_xy(728, 756), device=device)
         time.sleep(1)
     elif te == 0:
-        time.sleep(0.4)
+        time.sleep(0.1)
         attack_plan(jineng=jineng, device=device)
         while getxy("./pic/back_home.png", 0.2, device=device) == 0:
-            time.sleep(0.6)
+            time.sleep(0.05)
+        time.sleep(0.1)
         tap(*change_xy(726, 732), device=device)
     time.sleep(1)
